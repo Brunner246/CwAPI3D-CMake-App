@@ -47,6 +47,12 @@ class Vector3D;
 
     bool operator==(const Vector3D& other) const;
 
+    bool operator!=(const Vector3D& other) const;
+
+    double operator[](int index) const;
+
+    void set(int index, double value);
+
    // explicit operator CwAPI3D::vector3D() const;
 
   };
@@ -59,11 +65,11 @@ class Vector3D;
     return Vector3D(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
   }
 
-  inline Vector3D operator*(const Vector3D& vec, double scalar) {
+  inline Vector3D operator*(const Vector3D& vec, const double scalar) {
     return Vector3D(vec.x * scalar, vec.y * scalar, vec.z * scalar);
   }
 
-  inline Vector3D operator*(double scalar, const Vector3D& vec) {
+  inline Vector3D operator*(const double scalar, const Vector3D& vec) {
     return Vector3D(vec.x * scalar, vec.y * scalar, vec.z * scalar);
   }
 
@@ -76,3 +82,5 @@ class Vector3D;
   }
 
 }
+
+
