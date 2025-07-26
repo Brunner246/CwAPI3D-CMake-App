@@ -17,7 +17,7 @@ template<typename T>
 concept CoordinateSystem = requires(T t) {
 
   { t.getOrigin() } -> std::convertible_to<app::math::Point3D>;
-  { t.getLengthAxisEndPoint() } -> std::convertible_to<app::math::Point3D>;
+  // { t.getLengthAxisEndPoint() } -> std::convertible_to<app::math::Point3D>;
   { t.getHeightPoint() } -> std::convertible_to<app::math::Point3D>;
 
   { t.getXAxis() } -> std::convertible_to<app::math::Vector3D>;
@@ -51,9 +51,9 @@ public:
     [[nodiscard]] math::Vector3D getZAxis() const { return zAxis; }
 
     [[nodiscard]] math::Point3D getOrigin() const { return origin; }
-    [[nodiscard]] math::Point3D getLengthAxisEndPoint() const {
-        return origin + xAxis; // Point + Vector = Point
-    }
+    // [[nodiscard]] math::Point3D getLengthAxisEndPoint() const {
+    //     return origin; // + xAxis; // Point + Vector = Point
+    // }
     [[nodiscard]] math::Point3D getHeightPoint() const {
         return origin + zAxis; // Point + Vector = Point
     }
@@ -67,15 +67,16 @@ public:
 
 template<VectorOrPointType T>
 class ElementLocalCoordinateSystemAdapter {
-    ElementLocalAxis<T> coordSystem;
+
+    ElementLocalAxis coordSystem;
 
 public:
-    explicit ElementLocalCoordinateSystemAdapter(const ElementLocalAxis<T>& cs)
+    explicit ElementLocalCoordinateSystemAdapter(const ElementLocalAxis& cs)
         : coordSystem(cs) {}
 
     [[nodiscard]] math::Vector3D getXAxis() const {
-        auto start = coordSystem.getLengthAxisStartPt();
-        auto end = coordSystem.getLengthAxisEndPt();
+        const auto start = coordSystem.getOrigin();
+        const auto end = coordSystem.getLengthAxisEndPoint();
         return math::Vector3D(end.x - start.x, end.y - start.y, end.z - start.z).normalize();
     }
 
@@ -86,25 +87,25 @@ public:
     }
 
     [[nodiscard]] math::Vector3D getZAxis() const {
-        auto start = coordSystem.getLengthAxisStartPt();
-        auto height = coordSystem.getHeightPt();
+        const auto start = coordSystem.getOrigin();
+        const auto height = coordSystem.getHeightPoint();
         const auto heightVector = math::Vector3D(height.x - start.x, height.y - start.y, height.z - start.z);
         const auto xAxis = getXAxis();
         return xAxis.cross(heightVector).normalize();
     }
 
     [[nodiscard]] math::Point3D getOrigin() const {
-        auto origin = coordSystem.getLengthAxisStartPt();
+        const auto origin = coordSystem.getOrigin();
         return math::Point3D(origin.x, origin.y, origin.z);
     }
 
     [[nodiscard]] math::Point3D getLengthAxisEndPoint() const {
-        auto end = coordSystem.getLengthAxisEndPt();
+        const auto end = coordSystem.getLengthAxisEndPoint();
         return math::Point3D(end.x, end.y, end.z);
     }
 
     [[nodiscard]] math::Point3D getHeightPoint() const {
-        auto height = coordSystem.getHeightPt();
+        const auto height = coordSystem.getHeightPoint();
         return math::Point3D(height.x, height.y, height.z);
     }
 };

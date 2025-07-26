@@ -5,22 +5,68 @@
 
 #include "ElementFromPointsFactory.h"
 
+void registerRectangularBeamCreation(CwAPI3D::ControllerFactory *factory)
+{
+    app::element::factory::ElementFromPointsFactory::registerElementType(
+        app::element::factory::ElementFromPointsFactory::Beam,
+        [elementController = factory->getElementController()](const app::element::ElementDimension &elementDimension,
+                                                              const app::element::ElementLocalAxis &elementLocalAxis) ->
+        std::optional<ElementID>
+        {
+            if (elementController == nullptr) {
+                return std::nullopt;
+            }
+
+            const auto width = elementDimension.getWidth();
+            const auto height = elementDimension.getHeight();
+            const auto p1 = app::element::utils::toCwVector(elementLocalAxis.getOrigin());
+            const auto movedEndPt = elementLocalAxis.getOrigin() +
+                (elementLocalAxis.getXAxis() * elementDimension.getLength());
+            const auto p2 = app::element::utils::toCwVector(movedEndPt);
+            const auto p3 = app::element::utils::toCwVector(elementLocalAxis.getHeightPoint());
+
+            return elementController->createRectangularBeamPoints(width, height, p1, p2, p3);
+        });
+}
+
+void registerRectangularPanelVectorsCreation(CwAPI3D::ControllerFactory *factory)
+{
+    app::element::factory::ElementFromPointsFactory::registerElementType(
+        app::element::factory::ElementFromPointsFactory::Panel,
+        [elementController = factory->getElementController()](const app::element::ElementDimension &elementDimension,
+                                                              const app::element::ElementLocalAxis &elementLocalAxis) ->
+        std::optional<ElementID>
+        {
+            if (elementController == nullptr) {
+                return std::nullopt;
+            }
+
+            const auto width = elementDimension.getWidth();
+            const auto height = elementDimension.getHeight();
+            const auto length = elementDimension.getLength();
+            const auto origin = app::element::utils::toCwVector(elementLocalAxis.getOrigin());
+
+            const auto localXDir = app::element::utils::toCwVector(elementLocalAxis.getXAxis());
+            const auto localZDir = app::element::utils::toCwVector(elementLocalAxis.getZAxis());
+
+            return elementController->createRectangularPanelVectors(width,
+                                                                    height,
+                                                                    length,
+                                                                    origin,
+                                                                    localXDir,
+                                                                    localZDir);
+        });
+}
+
 CWAPI3D_PLUGIN bool plugin_x64_init(CwAPI3D::ControllerFactory *factory)
 {
     if (factory == nullptr) {
         return false;
     }
 
-    app::element::factory::ElementFromPointsFactory::registerElementType(
-        app::element::factory::ElementFromPointsFactory::Beam,
-        [elementController = factory->getElementController()](const double width,
-                                                              const double height,
-                                                              const CwAPI3D::vector3D &p1,
-                                                              const CwAPI3D::vector3D &p2,
-                                                              const CwAPI3D::vector3D &p3)
-        {
-            return elementController->createRectangularBeamPoints(width, height, p1, p2, p3);
-        });
+    registerRectangularBeamCreation(factory);
+    registerRectangularPanelVectorsCreation(factory);
+
 
     const auto elementDimension = app::element::ElementDimension(4500.0, 120.0, 240.0);
 
@@ -36,20 +82,24 @@ CWAPI3D_PLUGIN bool plugin_x64_init(CwAPI3D::ControllerFactory *factory)
         axisSystem
     );
 
+    auto bounded = [=](const app::math::Point3D &pt)
+    {
+        return app::element::ElementLocalAxis(xDirection, yDirection, zDirection, pt);
+    };
 
-    // auto elementLocalAxis = app::element::ElementLocalAxis<app::math::Point3D>();
-    // elementLocalAxis.setLengthAxisStartPt(0.0, 0.0, 0.0);
-    // const auto endPt = elementLocalAxis.getLengthAxisStartPt() * app::math::Vector3D(4500.0, 0.0, 0.0);
-    // elementLocalAxis.setLengthAxisEndPt(endPt.x, endPt.y, endPt.z);
-    // const auto heightPt = elementLocalAxis.getLengthAxisEndPt() * app::math::Vector3D(0.0, 1.0, 0.0);
-    // elementLocalAxis.setHeightPt(heightPt.x, heightPt.y, heightPt.z);
-    //
-    // const auto result = app::element::factory::ElementFromPointsFactory::createElementFromPoints<app::math::Point3D>(
-    //     app::element::factory::ElementFromPointsFactory::Beam,
-    //     elementDimension,
-    //     elementLocalAxis);
+    std::cout << "Created element ID: " << (beamId.has_value() ? std::to_string(beamId.value()) : "None") <<
+        std::endl;
 
-    std::cout << "Created element ID: " << (beamId.has_value() ? std::to_string(beamId.value()) : "None") << std::endl;
+
+    const auto panelId = app::element::factory::ElementFromPointsFactory::createElementFromPoints(
+        app::element::factory::ElementFromPointsFactory::Panel,
+        app::element::ElementDimension(2500.0, 1250.0, 15.0),
+        bounded(app::math::Point3D(1000.0, 500.0, 0.0))
+    );
+
+
+    std::cout << "Created element ID: " << (panelId.has_value() ? std::to_string(panelId.value()) : "None") <<
+        std::endl;
 
     return true;
 }

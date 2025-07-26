@@ -27,15 +27,19 @@ using ElementID = std::uint64_t;
 
 namespace app::element::utils
 {
-inline auto toCwVector(const math::Vector3D &vec) -> CwAPI3D::vector3D;
+auto toCwVector(const math::Vector3D &vec) -> CwAPI3D::vector3D;
 
-inline auto toCwVector(const math::Point3D &point) -> CwAPI3D::vector3D;
+auto toCwVector(const math::Point3D &point) -> CwAPI3D::vector3D;
 }
 
 namespace app::element::factory
 {
 class ElementFromPointsFactory
 {
+    using ElementCreatorFunction = std::function<std::optional<ElementID>(
+        const ElementDimension &,
+        const ElementLocalAxis &)>;
+
 public:
     enum Type { Beam, Panel };
 
@@ -59,30 +63,13 @@ public:
         auto endPoint = startPoint + (xAxisVector * dimensions.getLength());
         auto heightPoint = coordinateSystem.getHeightPoint();
 
-        return creatorFunction(
-            dimensions.getWidth(),
-            dimensions.getHeight(),
-            utils::toCwVector(startPoint),
-            utils::toCwVector(endPoint),
-            utils::toCwVector(heightPoint)
-        );
+        return creatorFunction(dimensions, coordinateSystem);
     }
 
-    static bool registerElementType(Type type,
-                                    const std::function<std::optional<ElementID>(
-                                        double,
-                                        double,
-                                        CwAPI3D::vector3D,
-                                        CwAPI3D::vector3D,
-                                        CwAPI3D::vector3D)> &creatorFunction);
+    static bool registerElementType(Type type, const ElementCreatorFunction &creatorFunction);
 
 private:
-    using Registry = std::unordered_map<Type, std::function<std::optional<ElementID>(
-                                            double,
-                                            double,
-                                            CwAPI3D::vector3D,
-                                            CwAPI3D::vector3D,
-                                            CwAPI3D::vector3D)> >;
+    using Registry = std::unordered_map<Type, ElementCreatorFunction>;
     static inline Registry registry;
 };
 }
