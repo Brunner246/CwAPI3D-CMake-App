@@ -24,7 +24,9 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(cwapi3dcpp) 
 
 add_subdirectory(src/math)
+add_subdirectory(include/models)
 add_subdirectory(src/app)
+add_subdirectory(src/cwAdapter)
 
 
 # set_property(TARGET CMakeCwAPI3D PROPERTY CXX_STANDARD 20)

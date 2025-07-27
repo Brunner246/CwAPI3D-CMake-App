@@ -6,6 +6,8 @@
 #include <functional>
 #include <optional>
 
+using ElementID = std::uint64_t;
+
 namespace app::element
 {
 class ElementLocalAxis;
@@ -23,9 +25,9 @@ public:
 
     virtual ~IElementCreationRegistry() = default;
 
-    virtual std::optional<ElementID> createElementFromPoints(Type type,
-                                                             const ElementDimension &dimensions,
-                                                             const ElementLocalAxis &coordinateSystem) = 0;
+    virtual std::optional<ElementID> create(Type type,
+                                            const ElementDimension &dimensions,
+                                            const ElementLocalAxis &coordinateSystem) = 0;
 
     virtual bool registerElementType(Type type,
                                      const std::function<std::optional<ElementID>(

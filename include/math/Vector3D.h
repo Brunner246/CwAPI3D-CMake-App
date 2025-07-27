@@ -1,6 +1,6 @@
 #pragma once
 #include <cmath>
-#include <exports.h>
+#include <math/exports.h>
 
 namespace CwAPI3D
 {

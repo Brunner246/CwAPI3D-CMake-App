@@ -75,9 +75,10 @@ public:
         : coordSystem(cs) {}
 
     [[nodiscard]] math::Vector3D getXAxis() const {
-        const auto start = coordSystem.getOrigin();
-        const auto end = coordSystem.getLengthAxisEndPoint();
-        return math::Vector3D(end.x - start.x, end.y - start.y, end.z - start.z).normalize();
+        // const auto start = coordSystem.getOrigin();
+        // const auto end = coordSystem.getLengthAxisEndPoint();
+        // return math::Vector3D(end.x - start.x, end.y - start.y, end.z - start.z).normalize();
+        return coordSystem.getXAxis().normalize();
     }
 
     [[nodiscard]] math::Vector3D getYAxis() const {
@@ -99,10 +100,11 @@ public:
         return math::Point3D(origin.x, origin.y, origin.z);
     }
 
-    [[nodiscard]] math::Point3D getLengthAxisEndPoint() const {
-        const auto end = coordSystem.getLengthAxisEndPoint();
-        return math::Point3D(end.x, end.y, end.z);
-    }
+    // [[nodiscard]] math::Point3D getLengthAxisEndPoint() const {
+    //     // const auto end = coordSystem.getLengthAxisEndPoint();
+    //     // return math::Point3D(end.x, end.y, end.z);
+    //     return getOrigin() + (getXAxis() * this->getLengthAxisEndPoint());
+    // }
 
     [[nodiscard]] math::Point3D getHeightPoint() const {
         const auto height = coordSystem.getHeightPoint();
