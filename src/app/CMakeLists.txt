@@ -5,13 +5,17 @@ add_library(${PROJECT_NAME})
 
 FetchContent_GetProperties(cwapi3dcpp SOURCE_DIR cwapi3dcpp_source_dir)
 
-target_sources(${PROJECT_NAME} PRIVATE
+target_sources(${PROJECT_NAME}
+        PRIVATE
         "CMakeCwAPI3D.cpp"
         "CMakeCwAPI3D.h"
-        "ElementFromPointsFactory.h"
-        "ElementFromPointsFactory.cpp"
+        "ElementCreationRegistry.h"
+        "ElementCreationRegistry.cpp"
         "ElementDimension.h"
-        "ElementLocalAxis.h")
+        "ElementLocalAxis.h"
+        PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../include/app/IElementCreationRegistry.hh
+)
 
 target_include_directories(${PROJECT_NAME}
         PRIVATE

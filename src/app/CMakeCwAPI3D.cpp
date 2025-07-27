@@ -3,12 +3,12 @@
 #include <cwapi3d/CwAPI3D.h>
 #include "CMakeCwAPI3D.h"
 
-#include "ElementFromPointsFactory.h"
+#include "ElementCreationRegistry.h"
 
 void registerRectangularBeamCreation(CwAPI3D::ControllerFactory *factory)
 {
-    app::element::factory::ElementFromPointsFactory::registerElementType(
-        app::element::factory::ElementFromPointsFactory::Beam,
+    app::element::factory::ElementCreationRegistry::registerElementType(
+        app::element::factory::ElementCreationRegistry::Beam,
         [elementController = factory->getElementController()](const app::element::ElementDimension &elementDimension,
                                                               const app::element::ElementLocalAxis &elementLocalAxis) ->
         std::optional<ElementID>
@@ -31,8 +31,8 @@ void registerRectangularBeamCreation(CwAPI3D::ControllerFactory *factory)
 
 void registerRectangularPanelVectorsCreation(CwAPI3D::ControllerFactory *factory)
 {
-    app::element::factory::ElementFromPointsFactory::registerElementType(
-        app::element::factory::ElementFromPointsFactory::Panel,
+    app::element::factory::ElementCreationRegistry::registerElementType(
+        app::element::factory::ElementCreationRegistry::Panel,
         [elementController = factory->getElementController()](const app::element::ElementDimension &elementDimension,
                                                               const app::element::ElementLocalAxis &elementLocalAxis) ->
         std::optional<ElementID>
@@ -76,8 +76,8 @@ CWAPI3D_PLUGIN bool plugin_x64_init(CwAPI3D::ControllerFactory *factory)
     constexpr app::math::Point3D origin(10.0, 5.0, 0.0);
 
     const app::element::ElementLocalAxis axisSystem(xDirection, yDirection, zDirection, origin);
-    const auto beamId = app::element::factory::ElementFromPointsFactory::createElementFromPoints(
-        app::element::factory::ElementFromPointsFactory::Beam,
+    const auto beamId = app::element::factory::ElementCreationRegistry::createElementFromPoints(
+        app::element::factory::ElementCreationRegistry::Beam,
         elementDimension,
         axisSystem
     );
@@ -91,8 +91,8 @@ CWAPI3D_PLUGIN bool plugin_x64_init(CwAPI3D::ControllerFactory *factory)
         std::endl;
 
 
-    const auto panelId = app::element::factory::ElementFromPointsFactory::createElementFromPoints(
-        app::element::factory::ElementFromPointsFactory::Panel,
+    const auto panelId = app::element::factory::ElementCreationRegistry::createElementFromPoints(
+        app::element::factory::ElementCreationRegistry::Panel,
         app::element::ElementDimension(2500.0, 1250.0, 15.0),
         bounded(app::math::Point3D(1000.0, 500.0, 0.0))
     );

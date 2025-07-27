@@ -1,9 +1,9 @@
 #include <cwapi3d/CwAPI3D.h>
-#include "ElementFromPointsFactory.h"
+#include "ElementCreationRegistry.h"
 #include "math/Vector3D.h"
 
 
-bool app::element::factory::ElementFromPointsFactory::registerElementType(const Type type,
+bool app::element::factory::ElementCreationRegistry::registerElementType(const Type type,
                                                                           const ElementCreatorFunction &creatorFunction)
 {
     if (registry.contains(type)) {
