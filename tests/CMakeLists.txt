@@ -15,11 +15,21 @@ add_executable(${PROJECT_NAME}
 example.cpp
 )
 
+target_include_directories(${PROJECT_NAME}
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/../include
+        ${CMAKE_CURRENT_SOURCE_DIR}/../src
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/app/>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include/math/>
+)
+
 target_link_libraries(${PROJECT_NAME} 
     PRIVATE
         gtest_main
         gmock
+        CMakeCwAPI3D::Math
 )
 
 add_test(NAME ApiTests COMMAND ${PROJECT_NAME})
+
 

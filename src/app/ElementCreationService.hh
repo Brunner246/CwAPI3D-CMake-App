@@ -12,16 +12,16 @@ namespace app::element::service
 {
 class APP_API ElementCreationService final: public IElementCreationService
 {
-    std::unique_ptr<factory::IElementCreationRegistry> elementCreationRegistry;
+    std::unique_ptr<registry::IElementCreationRegistry> elementCreationRegistry;
 
 public:
-    explicit ElementCreationService(std::unique_ptr<factory::IElementCreationRegistry> registry);
+    explicit ElementCreationService(std::unique_ptr<registry::IElementCreationRegistry> registry);
 
-    [[nodiscard]] std::optional<ElementID> createElementFromPoints(factory::IElementCreationRegistry::Type type,
+    [[nodiscard]] std::optional<ElementID> createElementFromPoints(registry::IElementCreationRegistry::Type type,
                                                      const ElementDimension &dimensions,
                                                      const ElementLocalAxis &coordinateSystem) const override;
 
-    bool registerElementType(factory::IElementCreationRegistry::Type type,
+    bool registerElementType(registry::IElementCreationRegistry::Type type,
                              const std::function<std::optional<ElementID>(
                                  const ElementDimension &,
                                  const ElementLocalAxis &)> &creatorFunction) const override;

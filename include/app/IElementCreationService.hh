@@ -17,16 +17,19 @@ class IElementCreationService
 public:
     virtual ~IElementCreationService() = default;
 
-    [[nodiscard]] virtual std::optional<ElementID> createElementFromPoints(factory::IElementCreationRegistry::Type type,
+    [[nodiscard]] virtual std::optional<ElementID> createElementFromPoints(registry::IElementCreationRegistry::Type type,
                                                              const ElementDimension &dimensions,
                                                              const ElementLocalAxis &coordinateSystem) const = 0;
 
-    virtual bool registerElementType(factory::IElementCreationRegistry::Type type,
+    virtual bool registerElementType(registry::IElementCreationRegistry::Type type,
                                      const std::function<std::optional<ElementID>(
                                          const ElementDimension &,
                                          const ElementLocalAxis &)> &creatorFunction) const = 0;
 };
 
 APP_API std::unique_ptr<IElementCreationService> createElementCreationService(
-    std::unique_ptr<factory::IElementCreationRegistry> registry);
+    std::unique_ptr<registry::IElementCreationRegistry> registry);
+
+APP_API std::unique_ptr<IElementCreationService> createElementCreationService();
+
 };

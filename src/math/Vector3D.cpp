@@ -1,5 +1,6 @@
-#include "../../include/math/Vector3D.h"
+#include "math/Vector3D.h"
 
+#include <cmath>
 #include <stdexcept>
 
 //TODO: Find another solution, i do not want depend on CwAPI3D in this project
@@ -12,6 +13,10 @@ app::math::Point3D app::math::Point3D::operator+(const Vector3D &vec) const
 app::math::Vector3D app::math::Point3D::operator-(const Point3D &other) const
 {
     return Vector3D(x - other.x, y - other.y, z - other.z);
+}
+uint32_t app::math::add(uint32_t a, uint32_t b)
+{
+    return a + b;
 }
 app::math::Vector3D app::math::Vector3D::operator+(const Vector3D &other) const
 {

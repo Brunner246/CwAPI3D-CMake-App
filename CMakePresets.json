@@ -4,6 +4,7 @@
     {
       "name": "windows-base",
       "hidden": true,
+      "toolchainFile": "cmake/qt_toolchain.cmake",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "installDir": "${sourceDir}/out/install/${presetName}",

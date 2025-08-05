@@ -1,7 +1,11 @@
 #include <gtest/gtest.h>
 
+#include "math/Vector3D.h"
 
-TEST(TestSuiteName, TestName) {
+TEST(TestSuiteName, TestName)
+{
+  const auto result = app::math::add(1, 2);
+  // EXPECT_GT(result, 0);
   EXPECT_EQ(2 + 2, 4);
 }
 

@@ -16,7 +16,7 @@ class ElementDimension;
 
 using ElementID = std::uint64_t;
 
-namespace app::element::factory
+namespace app::element::registry
 {
 class IElementCreationRegistry
 {

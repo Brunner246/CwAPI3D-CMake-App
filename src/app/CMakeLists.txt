@@ -7,9 +7,12 @@ target_sources(${PROJECT_NAME}
         PRIVATE
         ElementCreationService.hh
         ElementCreationService.cc
+
+        CommandProcessor.cc
         PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/../../include/app/IElementCreationRegistry.hh
         ${CMAKE_CURRENT_SOURCE_DIR}/../../include/app/IElementCreationService.hh
+        ${CMAKE_CURRENT_SOURCE_DIR}/../../include/app/CommandProcessor.hh
 )
 
 include(GenerateExportHeader)
@@ -23,6 +26,7 @@ generate_export_header(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME}
         PRIVATE
         ..
+        ${di_SOURCE_DIR}/include
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../include>

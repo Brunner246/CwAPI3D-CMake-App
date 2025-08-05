@@ -14,6 +14,7 @@ CWAPI3D_PLUGIN bool plugin_x64_init(CwAPI3D::ControllerFactory *factory)
     if (factory == nullptr) {
         return false;
     }
+    factory->getUtilityController()->createSnapshot();
     const auto elementCreationService = app::element::service::createElementCreationService(
         std::make_unique<app::element::factory::ElementCreationRegistry>());
 

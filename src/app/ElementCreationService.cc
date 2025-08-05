@@ -6,18 +6,38 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <boost/di.hpp>
 
 #include "models/ElementCreationException.hh"
+
+namespace app::element::service::di
+{
+auto createInjector()
+{
+    // return boost::di::make_injector(
+    //     boost::di::bind<registry::IElementCreationRegistry>().to<ElementCreationService>()
+    //TODO declspec dllexport for class ElementCreationRegistry
+    // );
+    return nullptr;
+}
+}
 
 namespace app::element::service
 {
 std::unique_ptr<IElementCreationService> createElementCreationService(
-    std::unique_ptr<factory::IElementCreationRegistry> registry)
+    std::unique_ptr<registry::IElementCreationRegistry> registry)
 {
     return std::make_unique<ElementCreationService>(std::move(registry));
 }
 
-ElementCreationService::ElementCreationService(std::unique_ptr<factory::IElementCreationRegistry> registry)
+std::unique_ptr<IElementCreationService> createElementCreationService()
+{
+    // const auto injector = di::createInjector();
+    // return injector.create<std::unique_ptr<ElementCreationService>>();
+    return nullptr;
+}
+
+ElementCreationService::ElementCreationService(std::unique_ptr<registry::IElementCreationRegistry> registry)
     : elementCreationRegistry(std::move(registry))
 {
     if (!elementCreationRegistry) {
@@ -25,7 +45,7 @@ ElementCreationService::ElementCreationService(std::unique_ptr<factory::IElement
     }
 }
 
-std::optional<ElementID> ElementCreationService::createElementFromPoints(factory::IElementCreationRegistry::Type type,
+std::optional<ElementID> ElementCreationService::createElementFromPoints(registry::IElementCreationRegistry::Type type,
                                                                          const ElementDimension &dimensions,
                                                                          const ElementLocalAxis &coordinateSystem) const
 {
@@ -44,7 +64,7 @@ std::optional<ElementID> ElementCreationService::createElementFromPoints(factory
     }
 }
 
-bool ElementCreationService::registerElementType(factory::IElementCreationRegistry::Type type,
+bool ElementCreationService::registerElementType(registry::IElementCreationRegistry::Type type,
                                                  const std::function<std::optional<ElementID>(
                                                      const ElementDimension &,
                                                      const ElementLocalAxis &)> &creatorFunction) const

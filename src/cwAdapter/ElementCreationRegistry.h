@@ -34,7 +34,7 @@ auto toCwVector(const math::Point3D &point) -> CwAPI3D::vector3D;
 
 namespace app::element::factory
 {
-class ElementCreationRegistry final: public IElementCreationRegistry
+class ElementCreationRegistry final: public registry::IElementCreationRegistry
 {
     using ElementCreatorFunction = std::function<std::optional<ElementID>(const ElementDimension &,
                                                                           const ElementLocalAxis &)>;
